@@ -3,7 +3,9 @@ import styled from "styled-components";
 import Fadein from "../styles/animations/FadeIn";
 import FormComponent from "../components/FormComponent";
 import IAuth from "../interfaces/IAuth";
-import loginUser from "../services/loginUser";
+import { useLogin } from "../hooks/useLogin";
+import { useNavigate } from "react-router-dom";
+import { UserContext } from "../contexts/UserContext";
 
 const LoginViewContainer = styled.div`
   opacity: 0;
@@ -11,15 +13,28 @@ const LoginViewContainer = styled.div`
 `;
 
 const LoginView = () => {
+  const navigate = useNavigate()
+  const {loggedIn} = React.useContext(UserContext)
+
+  const {loginUserWithEmailAndPassword} = useLogin()
+
   const registerInputs = [
     { type: "email", name: "email", placeholder: "Email", required: true },
     { type: "password", name: "password", placeholder: "Password", required: true },
   ];
 
-  const handleSubmit = (values: IAuth) => {
-    console.log("Form submitted:", values);
-    loginUser(values);
-  };
+  async function handleSubmit (values: IAuth) {
+    await loginUserWithEmailAndPassword({email: values.email, password: values.password})
+  }
+
+  React.useEffect(() => {
+    if (loggedIn) {
+      navigate('/dashboard ')
+    }
+    console.log("opa opa opaaaaa")
+    console.log(loggedIn)
+    
+  },[loggedIn, navigate])
 
   return (
     <LoginViewContainer>

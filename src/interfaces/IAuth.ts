@@ -1,5 +1,5 @@
 export default interface IAuth {
-  username:string,
+  username?:string,
   email:string,
   password:string,
 }

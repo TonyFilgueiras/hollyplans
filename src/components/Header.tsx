@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Button from "./Button";
 import { Link } from "react-router-dom";
+import { UserContext } from "../contexts/UserContext";
 
 const StyledHeader = styled.header`
   background-color: ${({ theme }) => theme.colors.blue};
@@ -26,19 +27,25 @@ const ButtonsContainer = styled.div`
 `;
 
 export default function Header() {
+  const { loggedIn, userLogout } = React.useContext(UserContext);
+
   return (
     <StyledHeader>
       <Link to="/">
         <AppName>HollyPlans</AppName>
       </Link>
-      <ButtonsContainer>
-        <Link to="/register">
-          <Button text="Sign up" negative />
-        </Link>
-        <Link to="/login">
-          <Button text="Login" />
-        </Link>
-      </ButtonsContainer>
+      {!loggedIn ? (
+        <ButtonsContainer>
+          <Link to="/register">
+            <Button text="Sign up" negative />
+          </Link>
+          <Link to="/login">
+            <Button text="Login" />
+          </Link>
+        </ButtonsContainer>
+      ) : (
+        <><Button text="Log out" onClick={userLogout} /></>
+      )}
     </StyledHeader>
   );
 }

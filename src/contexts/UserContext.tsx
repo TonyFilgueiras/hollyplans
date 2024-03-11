@@ -1,66 +1,62 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-
 // import IUser from 'interfaces/IUser'
-import React from 'react'
+import React from "react";
 // import { TOKEN_POST, TOKEN_VALIDATE_POST, USER_GET } from './api'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
+import IUser from "../interfaces/IUser";
+import ErrorContext from "./ErrorContext";
 
 interface UserContextProps {
-    children: React.ReactNode
-  }
-interface UserContextType  {
-  loading : boolean
-  setLoading: (newState: boolean)=>void
-  user: any|undefined
-  setUser: (newState: any|undefined)=>void
-  error: string
-  setError: (newState: string)=>void
-  loggedIn: boolean
-  setLoggedIn: (newState:boolean)=> void
-  userLogout: ()=> void
+  children: React.ReactNode;
 }
-  
+interface UserContextType {
+  loading: boolean;
+  setLoading: (newState: boolean) => void;
+  user: IUser | undefined;
+  setUser: (newState: IUser | undefined) => void;
+  loggedIn: boolean;
+  setLoggedIn: (newState: boolean) => void;
+  userLogout: () => void;
+}
+
 const initialValue = {
-  loading : true,
-  setLoading : ()=>{},
+  loading: true,
+  setLoading: () => {},
   user: undefined,
-  setUser : ()=>{},
-  error: '',
-  setError : ()=>{},
+  setUser: () => {},
   loggedIn: false,
-  setLoggedIn: () => { },
-  userLogout: ()=>{},
-}
+  setLoggedIn: () => {},
+  userLogout: () => {},
+};
 
-export const UserContext = React.createContext<UserContextType>(initialValue)
+export const UserContext = React.createContext<UserContextType>(initialValue);
 
-export const UserContextProvider=({children}: UserContextProps)=> {
-  const [loggedIn, setLoggedIn] = React.useState(false)
-  const [loading, setLoading] = React.useState(true)
-  const [user, setUser] = React.useState<any | undefined>()
-  const [error, setError] = React.useState('')
-  const navigate = useNavigate()
-  
+export const UserContextProvider = ({ children }: UserContextProps) => {
+  const [loggedIn, setLoggedIn] = React.useState(false);
+  const [loading, setLoading] = React.useState(true);
+  const [user, setUser] = React.useState<IUser | undefined>();
+  const {setError} = React.useContext(ErrorContext)
+
+  const navigate = useNavigate();
+
   const userLogout = React.useCallback(
     async function () {
-    setError('')
-    setLoading(false)
-      setLoggedIn(false)
-      setUser(undefined)
-    window.sessionStorage.clear()
-    navigate("/")
-    }, [navigate]
-  )
-  
-  
+      setError("");
+      setLoading(false);
+      setLoggedIn(false);
+      setUser(undefined);
+      window.sessionStorage.clear();
+      navigate("/");
+    },
+    [navigate, setError]
+  );
+
   // async function getUser(token) {
   //   const{url, options}= USER_GET(token)
   //   const response = await fetch (url, options)
   //     const json = await response.json()
   //     setLoggedIn(true)
   //   }
-      
+
   // async function userLogin(username, password) {
   //   try{
   //   setError('')
@@ -79,31 +75,31 @@ export const UserContextProvider=({children}: UserContextProps)=> {
   //     setLoading(false)
   //   }
   // }
-    
+
   React.useEffect(() => {
-    async function autoLogin() {        
-      const storedUserString = window.sessionStorage.getItem("userLogado")
+    async function autoLogin() {
+      const storedUserString = window.sessionStorage.getItem("userLogado");
       if (storedUserString) {
-        try {          
-          const storedUser = JSON.parse(storedUserString)
-          setUser(storedUser)
-          setLoggedIn(true)
-        } catch (err:any) {
-          setError(err)
-          userLogout()
+        try {
+          const storedUser = JSON.parse(storedUserString);
+          setUser(storedUser);
+          setLoggedIn(true);
+        } catch (err: any) {
+          setError(err);
+          userLogout();
         } finally {
-          setLoading(false)
+          setLoading(false);
         }
       } else {
-        setLoading(false)
+        setLoading(false);
       }
     }
-    autoLogin()
-  }, [userLogout])
-    
+    autoLogin();
+  }, [userLogout, setError]);
+
   return (
-    <UserContext.Provider value={{ loading, setLoading, user,setUser, error, setError, loggedIn, setLoggedIn, userLogout}}>
+    <UserContext.Provider value={{ loading, setLoading, user, setUser, loggedIn, setLoggedIn, userLogout }}>
       {children}
     </UserContext.Provider>
-  )
-}
+  );
+};

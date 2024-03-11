@@ -6,19 +6,29 @@ import { theme } from "./styles/Theme";
 import Header from "./components/Header";
 import RegisterView from "./views/RegisterView";
 import LoginView from "./views/LoginView";
+import { UserContextProvider } from "./contexts/UserContext";
+import UserDashboardView from "./views/UserDashboardView";
+import { ErrorContextProvider } from "./contexts/ErrorContext";
+import ErrorModal from "./components/ErrorModal";
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
-      <BrowserRouter>
-        <Header />
-        <Routes>
-          <Route path="/" element={<HomeView />} />
-          <Route path="/login" element={<LoginView />} />
-          <Route path="/register" element={<RegisterView />} />
-        </Routes>
-      </BrowserRouter>
+      <ErrorContextProvider>
+        <BrowserRouter>
+          <UserContextProvider>
+            <Header />
+            <Routes>
+              <Route path="/" element={<HomeView />} />
+              <Route path="/dashboard" element={<UserDashboardView />} />
+              <Route path="/login" element={<LoginView />} />
+              <Route path="/register" element={<RegisterView />} />
+            </Routes>
+          </UserContextProvider>
+        </BrowserRouter>
+        <ErrorModal/>
+      </ErrorContextProvider>
     </ThemeProvider>
   );
 }

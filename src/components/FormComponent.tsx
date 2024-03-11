@@ -30,7 +30,6 @@ const AuthFormContainer = styled.div`
 
 const StyledTitle = styled.h1`
   ${Title({ animationDelay: 0 })}
-  animation-delay: 0;
 `;
 
 const StyledForm = styled.form`
@@ -62,12 +61,12 @@ const StyledButton = styled(Button)<{ $animationDelay: number }>`
 `;
 
 const AuthForm: React.FC<Props> = ({ title, inputs, handleSubmit, buttonText }) => {
-  const { values, handleChange, resetForm } = useForm<FormValues>({});
+  const { values, handleChange,} = useForm<FormValues>({});
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     handleSubmit(values);
-    resetForm();
+    // resetForm();
   };
 
   return (
