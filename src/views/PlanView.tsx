@@ -9,6 +9,10 @@ import { ReturnButton } from "../styles/ReturnButton";
 import { LuPencil } from "react-icons/lu";
 import { device } from "../styles/Breakpoints";
 import WarningModalContext from "../contexts/WarningModalContext";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import domtoimage from "dom-to-image";
+import PdfDocument from "../PdfDocument";
 
 const ViewContainer = styled.div`
   background-color: ${({ theme }) => theme.colors.skyBlue};
@@ -101,7 +105,7 @@ export default function PlanView() {
   const [plan, setPlan] = React.useState<IHolidayPlans>();
   const { getPlanById } = useFetchPlans();
   const navigate = useNavigate();
-  const { setSuccess, setError } = React.useContext(WarningModalContext);
+  const { setError } = React.useContext(WarningModalContext);
 
   React.useEffect(() => {
     const fetchPlan = async () => {
@@ -122,6 +126,31 @@ export default function PlanView() {
     };
     fetchPlan();
   }, [getPlanById, id, navigate, setError]);
+
+  function downloadPdf(planName: string) {
+    const modifiedPlanName = planName.replace(" ", "_");
+  
+    // Get the HTML element to be converted to PDF
+    const element = document.getElementById("plan-container");
+  
+    domtoimage
+      .toPng(element! )
+      .then(function (dataUrl) {
+        // Create a new jsPDF instance
+        const pdf = new jsPDF();
+  
+        // Add the image to the PDF
+        pdf.addImage(dataUrl, "PNG", 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+    
+        // Save the PDF
+        pdf.save(`${modifiedPlanName}_hollyPlan.pdf`);
+      })
+      .catch(function (error) {
+        console.error("Error converting to image:", error);
+      });
+  }
+
+  
 
   return (
     <ViewContainer>
@@ -153,7 +182,8 @@ export default function PlanView() {
             <StyledH2>Activities:</StyledH2> {plan.activities.join(", ")}
           </InfoContainer>
 
-          <Button text="Download Plan as pdf" onClick={() => setSuccess("Esse botão faz nada kkkk")} />
+          <Button text="Download Plan as pdf" onClick={() => downloadPdf(plan.name)} />
+          <PdfDocument plan={plan}/>
         </PlanContainer>
       )}
     </ViewContainer>
