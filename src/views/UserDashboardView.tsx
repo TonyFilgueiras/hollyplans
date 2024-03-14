@@ -23,8 +23,7 @@ const PlansCardContainer = styled.div`
   margin: auto;
   overflow: auto;
 
-
-  &.overflowRemoved{
+  &.overflowRemoved {
     overflow: visible;
   }
 `;
@@ -50,7 +49,7 @@ const CreatePlanButton = styled(Button)`
 
 const PlanCard = styled.div<{ $animationDelay: number }>`
   opacity: 0;
-  max-width: 78vw;
+  max-width: 76vw;
   color: ${({ theme }) => theme.colors.blue};
   border-radius: 10px;
   height: 100px;
@@ -96,12 +95,12 @@ const PlanCard = styled.div<{ $animationDelay: number }>`
 
 const DescriptionContainer = styled.h2`
   margin: 15px auto 0 auto;
-  max-width: 70vw;
+  max-width: 50vw;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   &.clicked {
-    color: ${({theme})=> theme.colors.skyBlue};
+    color: ${({ theme }) => theme.colors.skyBlue};
   }
 `;
 
@@ -110,7 +109,7 @@ const CardName = styled(StyledTitle)`
   margin: 0;
   font-weight: normal;
   &.clicked {
-    color: ${({theme})=> theme.colors.skyBlue};
+    color: ${({ theme }) => theme.colors.skyBlue};
   }
 `;
 
@@ -124,8 +123,8 @@ export default function UserDashboardView() {
 
   const handleClick = (planId: string) => {
     setClickedPlanId(planId);
-    setOverflowRemoved(true)
-    
+    setOverflowRemoved(true);
+
     const otherPlanIds = plans.map((plan) => plan.id).filter((id) => id !== planId);
 
     setNotClickedPlanId(otherPlanIds);
@@ -136,7 +135,6 @@ export default function UserDashboardView() {
 
   React.useEffect(() => {
     getPlans();
-    console.log(plans)
   }, [getPlans]);
 
   return (
@@ -148,25 +146,31 @@ export default function UserDashboardView() {
       {loading ? (
         <Loading />
       ) : plans.length > 0 ? (
-        <PlansCardContainer className={overflowRemoved ? "overflowRemoved" : ""}>
+        <>
           <CreatePlanButton text="Create new plan" onClick={() => navigate("/newplan")} />
-          {plans
-            .filter((plan) => plan.user === user?.username)
-            .map((plan, index) => (
-              <PlanCard
-                key={plan.id}
-                className={plan.id === clickedPlanId ? "clicked" : notClickedPlanId.includes(plan.id) ? "notClicked" : ""}
-                onClick={() => handleClick(plan.id)}
-                $animationDelay={(index + 1) / 2}
-              >
-                <CardName className={plan.id === clickedPlanId ? "clicked" : notClickedPlanId.includes(plan.id) ? "notClicked" : ""}>
-                  {plan.name}
-                </CardName>
-                {plan.description && <DescriptionContainer className={plan.id === clickedPlanId ? "clicked" : notClickedPlanId.includes(plan.id) ? "notClicked" : ""}>{plan.description}</DescriptionContainer>}
-                {plan.location && <span>{plan.location}</span>}
-              </PlanCard>
-            ))}
-        </PlansCardContainer>
+          <PlansCardContainer className={overflowRemoved ? "overflowRemoved" : ""}>
+            {plans
+              .filter((plan) => plan.user === user?.username)
+              .map((plan, index) => (
+                <PlanCard
+                  key={plan.id}
+                  className={plan.id === clickedPlanId ? "clicked" : notClickedPlanId.includes(plan.id) ? "notClicked" : ""}
+                  onClick={() => handleClick(plan.id)}
+                  $animationDelay={(index + 1) / 2}
+                >
+                  <CardName className={plan.id === clickedPlanId ? "clicked" : notClickedPlanId.includes(plan.id) ? "notClicked" : ""}>
+                    {plan.name}
+                  </CardName>
+                  {plan.description && (
+                    <DescriptionContainer className={plan.id === clickedPlanId ? "clicked" : notClickedPlanId.includes(plan.id) ? "notClicked" : ""}>
+                      {plan.description}
+                    </DescriptionContainer>
+                  )}
+                  {plan.location && <span>{plan.location}</span>}
+                </PlanCard>
+              ))}
+          </PlansCardContainer>
+        </>
       ) : (
         <NoPlansFound carta="produto/serviço" />
       )}

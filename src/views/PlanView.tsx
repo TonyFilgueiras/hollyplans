@@ -7,6 +7,7 @@ import IHolidayPlans from "../interfaces/IHolidayPlans";
 import Button from "../components/Button";
 import { ReturnButton } from "../styles/ReturnButton";
 import { LuPencil } from "react-icons/lu";
+import ModalContext from "../contexts/ModalContext";
 
 const ViewContainer = styled.div`
   background-color: ${({ theme }) => theme.colors.skyBlue};
@@ -30,6 +31,7 @@ const StyledReturnButton = styled(Button)`
 
 const StyledEditButton = styled.div`
   ${ReturnButton}
+  margin: 10px;
   transition: all.2s;
   color: ${({ theme }) => theme.colors.blue};
   line-height: 57px;
@@ -48,6 +50,18 @@ const StyledEditButton = styled.div`
 const StyledTitle = styled.h1`
   ${Title({ animationDelay: 0 })}
   text-transform: uppercase;
+  font-family: ${({ theme }) => theme.fonts.appTheme};
+  font-weight: bold;
+  text-decoration: underline;
+  text-decoration-style: wavy;
+`;
+
+const InfoContainer = styled.div`
+  display: flex;
+`;
+
+const StyledH2 = styled.h2`
+  font-weight: bold;
 `;
 
 const PlanContainer = styled.div`
@@ -69,6 +83,7 @@ export default function PlanView() {
   const [plan, setPlan] = React.useState<IHolidayPlans>();
   const { getPlanById } = useFetchPlans();
   const navigate = useNavigate();
+  const { setSuccess } = React.useContext(ModalContext);
 
   React.useEffect(() => {
     const fetchPlan = async () => {
@@ -98,14 +113,26 @@ export default function PlanView() {
               <LuPencil />
             </StyledEditButton>
           </TitleHeader>
-          <StyledTitle>Activities: {plan.activities.join(", ")}</StyledTitle>
-          <StyledTitle>Description: {plan.description}</StyledTitle>
-          <StyledTitle>End Date: {plan.endDate}</StyledTitle>
-          <StyledTitle>Location: {plan.location}</StyledTitle>
-          <StyledTitle>Participants: {plan.participants.join(", ")}</StyledTitle>
-          <StyledTitle>Start Date: {plan.startDate}</StyledTitle>
+          <InfoContainer>
+            <StyledH2>Description:</StyledH2> {plan.description}
+          </InfoContainer>
+          <InfoContainer>
+            <StyledH2>Location:</StyledH2> {plan.location}
+          </InfoContainer>
+          <InfoContainer>
+            <StyledH2>End Date:</StyledH2> {plan.endDate}
+          </InfoContainer>
+          <InfoContainer>
+            <StyledH2>Start Date:</StyledH2> {plan.startDate}
+          </InfoContainer>
+          <InfoContainer>
+            <StyledH2>Participants:</StyledH2> {plan.participants.join(", ")}
+          </InfoContainer>
+          <InfoContainer>
+            <StyledH2>Activities:</StyledH2> {plan.activities.join(", ")}
+          </InfoContainer>
 
-          <Button text="Download Plan as pdf" />
+          <Button text="Download Plan as pdf" onClick={() => setSuccess("Esse botão faz nada kkkk")} />
         </PlanContainer>
       )}
     </ViewContainer>

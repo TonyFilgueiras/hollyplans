@@ -9,9 +9,10 @@ interface Props {
 export const Title  = ({ animationDelay}: Props) => css`
 opacity: 0;
 color: ${({ theme }) => theme.colors.blue};
-font-size: 2rem;
+font-size: clamp(20px, 5vw, 2rem);
 font-family: ${theme.fonts.title};
 color: ${theme.colors.blue};
+
 animation: ${Fadein} 2s forwards;
 animation-delay: ${animationDelay}s;
 padding: 30px;

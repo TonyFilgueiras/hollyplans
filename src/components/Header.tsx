@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Button from "./Button";
 import { Link } from "react-router-dom";
 import { UserContext } from "../contexts/UserContext";
+import { device } from "../styles/Breakpoints";
 
 const StyledHeader = styled.header`
   background-color: ${({ theme }) => theme.colors.blue};
@@ -13,17 +14,34 @@ const StyledHeader = styled.header`
   padding: 10px 20px;
   position: relative;
   z-index: 99;
+  overflow: hidden;
+  @media (${device.sm}) {
+    padding: 10px;
+  }
 `;
 const AppName = styled.h1`
   color: ${({ theme }) => theme.colors.skyBlue};
-  font-size: 2rem;
+  font-size: clamp(10px, 5vw, 2rem);
   font-family: ${({ theme }) => theme.fonts.appTheme};
   padding: 20px;
+
+  @media (${device.sm}) {
+    padding: 0;
+  }
 `;
 
 const ButtonsContainer = styled.div`
   display: flex;
   align-items: center;
+`;
+
+const StyledButton = styled(Button)`
+  font-size: clamp(10px, 2vw, 0.9rem);
+
+  @media (${device.sm}) {
+    letter-spacing: 0.1px;
+    padding: 10px;
+  }
 `;
 
 export default function Header() {
@@ -37,14 +55,16 @@ export default function Header() {
       {!loggedIn ? (
         <ButtonsContainer>
           <Link to="/register">
-            <Button text="Sign up" negative />
+            <StyledButton text="Sign up" negative />
           </Link>
           <Link to="/login">
-            <Button text="Login" />
+            <StyledButton text="Login" />
           </Link>
         </ButtonsContainer>
       ) : (
-        <><Button text="Log out" onClick={userLogout} /></>
+        <>
+          <StyledButton text="Log out" onClick={userLogout} />
+        </>
       )}
     </StyledHeader>
   );

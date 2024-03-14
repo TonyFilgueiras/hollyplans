@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import Fadein from "../styles/animations/FadeIn";
+import { device } from "../styles/Breakpoints";
 
 type Props = {
   slides: Array<string>;
 };
 
 const CarouselContainer = styled.div`
+  display: block;
   opacity: 0;
   animation: ${Fadein} 2s forwards;
   animation-delay: 2.5s;
@@ -15,6 +17,10 @@ const CarouselContainer = styled.div`
   font-family: ${({ theme }) => theme.fonts.standard};
   font-weight: bold;
   margin: auto;
+
+  @media (${device.sm}) {
+    display: none;
+  }
 `;
 
 const SlidesContainer = styled.div<{ currentslide: number }>`

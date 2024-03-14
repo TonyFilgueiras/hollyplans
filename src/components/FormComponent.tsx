@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FocusEventHandler } from "react";
 import useForm from "../hooks/useForm";
 import styled, { css } from "styled-components";
 import Fadein from "../styles/animations/FadeIn";
@@ -6,6 +6,8 @@ import Button from "../components/Button";
 import { Title } from "../styles/Title";
 import { ReturnButton } from "../styles/ReturnButton";
 import { useNavigate } from "react-router-dom";
+import TagsContainer from "./TagsContainer";
+import ModalContext from "../contexts/ModalContext";
 
 export type FormValues = {
   [key: string]: string;
@@ -45,6 +47,7 @@ const InvisibleTag = styled.div`
 
 const StyledTitle = styled.h1`
   ${Title({ animationDelay: 0 })}
+  font-size:2rem;
 `;
 
 const StyledForm = styled.form`
@@ -56,12 +59,14 @@ const StyledForm = styled.form`
 
 const StyledInput = styled.input<{ $animationDelay: number }>`
   opacity: 0;
-  margin-bottom: 10px;
   padding: 8px;
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 5px;
   animation: ${Fadein} 2s forwards;
+  margin: 0 auto 10px auto;
+  width: 90%;
+  background-color: #fff;
   ${(props) => css`
     animation-delay: ${props.$animationDelay}s;
   `}
@@ -79,67 +84,49 @@ const StyledButton = styled(Button)<{ $animationDelay: number }>`
   `}
 `;
 
-const TagsContainer = styled.div<{ $animationDelay: number }>`
-  opacity: 0;
-  border: 1px solid #ccc;
-  padding: 0.5em;
-  border-radius: 2px;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.5em;
-  animation: ${Fadein} 2s forwards;
-`;
-
-const TagItem = styled.div`
-  background-color: ${({ theme }) => theme.colors.blue};
-  display: inline-block;
-  padding: 0.5em 0.75em;
-  border-radius: 20px;
-  font-family: ${({ theme }) => theme.fonts.standard};
-
-  .close {
-    height: 20px;
-    width: 20px;
-    background-color: ${({ theme }) => theme.colors.pink};
-    color: #fff;
-    border-radius: 50%;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    margin-left: 0.5em;
-    font-size: 18px;
-    cursor: pointer;
-  }
-`;
-
-const TagInput = styled(StyledInput)`
-  width: 100%;
-`;
-
 const AuthForm: React.FC<Props> = ({ title, inputs, handleSubmit, buttonText }) => {
   const { values, handleChange } = useForm<FormValues>({});
   const [tags, setTags] = React.useState<{ [name: string]: string[] }>(
     Object.fromEntries(inputs.filter((input) => input.type === "tags").map((input) => [input.name, []]))
   );
+  const { setError } = React.useContext(ModalContext);
   const navigate = useNavigate();
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    handleSubmit({ ...values, ...tags }); // Include tags in the form values
+    handleSubmit({ ...values, ...tags });
     // resetForm();
   };
 
+  function handleFocus(e: React.FocusEvent<HTMLInputElement>) {
+    if (e.target.placeholder.includes("Date")) {
+      e.target.type = "datetime-local";
+      e.target.focus()
+    }
+  }
+
+  function handleBlur(e: React.FocusEvent<HTMLInputElement>) {
+    if (e.target.placeholder.includes("Date") && e.target.value === "") {
+      e.target.type = "text";
+    }
+  }
+
   function handleKeyDown(inputName: string, e: React.KeyboardEvent<HTMLInputElement>) {
+    setError(e.key);
     if (e.key !== "Enter") return;
+
     e.preventDefault();
+
     const value = (e.target as HTMLInputElement).value;
     if (!value.trim()) return;
-    setTags((prevTags) => ({
-      ...prevTags,
-      [inputName]: [...prevTags[inputName], value],
-    }));
-    (e.target as HTMLInputElement).value = "";
+
+    if (e.key === "Enter") {
+      setTags((prevTags) => ({
+        ...prevTags,
+        [inputName]: [...prevTags[inputName], value],
+      }));
+      (e.target as HTMLInputElement).value = "";
+    }
   }
 
   function removeTag(inputName: string, index: number) {
@@ -168,24 +155,19 @@ const AuthForm: React.FC<Props> = ({ title, inputs, handleSubmit, buttonText }) 
               onChange={handleChange}
               placeholder={input.placeholder}
               required={input.required}
+              onFocus={(e) => handleFocus(e)}
+              onBlur={(e) => handleBlur(e)}
             />
           ) : (
-            <TagsContainer $animationDelay={(index + 1) / 2} key={index}>
-              {tags[input.name].map((tag, tagIndex) => (
-                <TagItem key={tagIndex}>
-                  <span>{tag}</span>
-                  <span className="close" onClick={() => removeTag(input.name, tagIndex)}>
-                    x
-                  </span>
-                </TagItem>
-              ))}
-              <TagInput
-                $animationDelay={(index + 1) / 2}
-                onKeyDown={(e) => handleKeyDown(input.name, e)}
-                type="text"
-                placeholder={input.placeholder}
-              />
-            </TagsContainer>
+            <TagsContainer
+              index={index}
+              inputName={input.name}
+              inputPlaceholder={input.placeholder}
+              tags={tags}
+              handleKeyDown={handleKeyDown}
+              removeTag={removeTag}
+              key={index}
+            />
           )
         )}
 
