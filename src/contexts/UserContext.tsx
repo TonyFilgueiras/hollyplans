@@ -3,7 +3,7 @@ import React from "react";
 // import { TOKEN_POST, TOKEN_VALIDATE_POST, USER_GET } from './api'
 import { useNavigate } from "react-router-dom";
 import IUser from "../interfaces/IUser";
-import ModalContext from "./ModalContext";
+import ModalContext from "./WarningModalContext";
 
 interface UserContextProps {
   children: React.ReactNode;

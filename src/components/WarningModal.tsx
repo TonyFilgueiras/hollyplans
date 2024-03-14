@@ -1,6 +1,6 @@
 import React from "react";
 import styled, { css } from "styled-components";
-import ModalContext from "../contexts/ModalContext";
+import ModalContext from "../contexts/WarningModalContext";
 import Dropdown from "../styles/animations/Dropdown";
 
 const Styleddiv = styled.div<{ $isOpened?: boolean }>`
@@ -37,7 +37,7 @@ const SuccessModal = styled(Styleddiv)`
   background-color: ${({ theme }) => theme.colors.green};
 `;
 
-export default function Modal() {
+export default function WarningModal() {
   const { isOpen, error, success } = React.useContext(ModalContext);
   return (
     <>

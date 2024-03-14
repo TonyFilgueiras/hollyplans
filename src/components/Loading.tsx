@@ -2,6 +2,10 @@ import React from "react";
 import styled from "styled-components";
 import { Title } from "../styles/Title";
 
+type Props = {
+  text?: string
+}
+
 const LoadingContainer = styled.div`
   background-color: ${({ theme }) => theme.colors.blue};
   position: fixed;
@@ -36,10 +40,10 @@ const LoadingBar = styled.div`
   }
 `;
 
-export default function Loading() {
+export default function Loading({text = "Loading"}:Props) {
   return (
     <LoadingContainer>
-      <StyledTitle>Loading</StyledTitle>
+      <StyledTitle>{text}</StyledTitle>
       <LoadingBar/>
     </LoadingContainer>
   );

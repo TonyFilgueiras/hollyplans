@@ -7,8 +7,9 @@ import { Title } from "../styles/Title";
 import { ReturnButton } from "../styles/ReturnButton";
 import { useNavigate } from "react-router-dom";
 import TagsContainer from "./TagsContainer";
-import ModalContext from "../contexts/ModalContext";
+import ModalContext from "../contexts/WarningModalContext";
 import IHolidayPlans from "../interfaces/IHolidayPlans";
+import { RiDeleteBin5Fill } from "react-icons/ri";
 
 export type FormValues = {
   [key: string]: string;
@@ -27,6 +28,8 @@ type Props = {
   inputs: InputConfig[];
   handleSubmit: (values: any) => void;
   buttonText: string;
+  editing?: boolean;
+  handleDelete?: (value: string) => void;
 };
 
 const AuthFormContainer = styled.div`
@@ -42,9 +45,25 @@ const TitleHeader = styled.div`
   align-items: center;
 `;
 
-const InvisibleTag = styled.div`
+const DeleteButton = styled.div`
   ${ReturnButton}
-  visibility: hidden;
+  margin: 10px;
+  transition: all.2s;
+  color: ${({ theme }) => theme.colors.pink};
+  line-height: 57px;
+  font-size: 1.5rem;
+
+  &.notEditing {
+    visibility: hidden;
+  }
+
+  &:hover {
+    filter: brightness(1.1);
+    cursor: pointer;
+  }
+  &:active {
+    transform: scale(0.95);
+  }
 `;
 
 const StyledTitle = styled.h1`
@@ -86,7 +105,7 @@ const StyledButton = styled(Button)<{ $animationDelay: number }>`
   `}
 `;
 
-const AuthForm: React.FC<Props> = ({ initialValues, title, inputs, handleSubmit, buttonText }) => {
+const AuthForm: React.FC<Props> = ({ initialValues, title, inputs, handleSubmit, buttonText, editing = false, handleDelete= ()=>{} }) => {
   const { values, setValues, handleChange } = useForm<FormValues>({});
   const [tags, setTags] = React.useState<{ [name: string]: string[] }>(
     Object.fromEntries(inputs.filter((input) => input.type === "tags").map((input) => [input.name, []]))
@@ -179,7 +198,14 @@ const AuthForm: React.FC<Props> = ({ initialValues, title, inputs, handleSubmit,
       <TitleHeader>
         <StyledReturnButton text="<" onClick={() => navigate(-1)} />
         <StyledTitle>{title}</StyledTitle>
-        <InvisibleTag></InvisibleTag>
+        <DeleteButton
+          className={editing ? "editing" : "notEditing"}
+          onClick={() => {
+            handleDelete(initialValues!.id);
+          }}
+        >
+          <RiDeleteBin5Fill />
+        </DeleteButton>
       </TitleHeader>
       <StyledForm onSubmit={onSubmit}>
         {inputs.map((input, index) =>

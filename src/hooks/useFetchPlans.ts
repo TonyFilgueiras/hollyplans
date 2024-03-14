@@ -2,7 +2,7 @@ import { getDocs, collection, DocumentData, getDoc, doc } from "firebase/firesto
 import React from "react";
 import { FBFirestore } from "../services/firebase";
 import IHolidayPlans from "../interfaces/IHolidayPlans";
-import ModalContext from "../contexts/ModalContext";
+import ModalContext from "../contexts/WarningModalContext";
 import { FirebaseError } from "@firebase/app";
 
 export default function useFetchPlans() {

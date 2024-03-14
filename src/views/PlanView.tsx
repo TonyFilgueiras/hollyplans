@@ -7,7 +7,7 @@ import IHolidayPlans from "../interfaces/IHolidayPlans";
 import Button from "../components/Button";
 import { ReturnButton } from "../styles/ReturnButton";
 import { LuPencil } from "react-icons/lu";
-import ModalContext from "../contexts/ModalContext";
+import ModalContext from "../contexts/WarningModalContext";
 import { device } from "../styles/Breakpoints";
 
 const ViewContainer = styled.div`

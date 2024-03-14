@@ -23,7 +23,7 @@ const GlobalStyle = createGlobalStyle`
     background: linear-gradient(white, ${({ theme }) => theme.colors.beige});
     color: white;
     text-align: center;
-    overflow-x: hidden;
+    overflow: hidden;
     transition: all 2s ease;
   }
   a{

@@ -4,7 +4,7 @@ import Fadein from "../styles/animations/FadeIn";
 import createUserWithEmail from "../services/createUser";
 import FormComponent from "../components/FormComponent";
 import IAuth from "../interfaces/IAuth";
-import ModalContext from "../contexts/ModalContext";
+import ModalContext from "../contexts/WarningModalContext";
 
 const RegisterViewContainer = styled.div`
   opacity: 0;

@@ -19,15 +19,22 @@ const StyledTagsContainer = styled.div<{ $animationDelay: number }>`
   flex-wrap: wrap;
   gap: 0.5em;
   animation: ${Fadein} 2s forwards;
-`;
+  `;
 
-const TagItem = styled.div`
+const TagItem = styled.div<{ $animationDelay: number }>`
+  opacity: 0;
   background-color: ${({ theme }) => theme.colors.blue};
   display: inline-block;
   padding: 0.5em 0.75em;
   border-radius: 20px;
   font-family: ${({ theme }) => theme.fonts.standard};
+  
+  animation: ${Fadein} 2s forwards;
+  ${(props) => css`
+    animation-delay: ${props.$animationDelay};
+  `}
 
+  
   .close {
     height: 20px;
     width: 20px;
@@ -41,7 +48,7 @@ const TagItem = styled.div`
     font-size: 18px;
     cursor: pointer;
   }
-`;
+  `;
 
 const TagInput = styled.input<{ $animationDelay: number }>`
   margin: 0 auto 10px auto;
@@ -62,19 +69,14 @@ export default function TagsContainer({ index, tags, inputName, inputPlaceholder
   return (
     <StyledTagsContainer $animationDelay={(index + 1) / 2} key={index}>
       {tags[inputName].map((tag, tagIndex) => (
-        <TagItem key={tagIndex}>
+        <TagItem $animationDelay={((index + 1) / 2) + tagIndex + 33} key={tagIndex}>
           <span>{tag}</span>
           <span className="close" onClick={() => removeTag(inputName, tagIndex)}>
             x
           </span>
         </TagItem>
       ))}
-      <TagInput
-        $animationDelay={(index + 1) / 2}
-        onKeyDown={(e) => handleKeyDown(inputName, e)}
-        type="text"
-        placeholder={inputPlaceholder}
-      />
+      <TagInput $animationDelay={(index + 1) / 2} onKeyDown={(e) => handleKeyDown(inputName, e)} type="text" placeholder={inputPlaceholder} />
     </StyledTagsContainer>
   );
 }

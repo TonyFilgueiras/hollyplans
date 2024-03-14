@@ -5,7 +5,7 @@ import React from "react";
 import { getAuth } from "firebase/auth";
 import { FBAuth, FBFirestore } from "../services/firebase";
 import { doc, getDoc } from "firebase/firestore";
-import ModalContext from "../contexts/ModalContext";
+import ModalContext from "../contexts/WarningModalContext";
 
 export function useLogin() {
   const { setUser, setLoading, setLoggedIn } = React.useContext(UserContext);

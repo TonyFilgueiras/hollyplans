@@ -1,10 +1,10 @@
 import React from "react";
 
-interface ModalContextProps {
+interface WarningModalContextProps {
   children: React.ReactNode;
 }
 
-interface ModalContextType {
+interface WarningModalContextType {
   isOpen: boolean;
   error: string,
   setError: (error: string) => void;
@@ -19,9 +19,9 @@ const initialValue = {
   setSuccess: () => {},
 };
 
-const ModalContext = React.createContext<ModalContextType>(initialValue);
+const WarningModalContext = React.createContext<WarningModalContextType>(initialValue);
 
-export const ModalContextProvider = ({ children }: ModalContextProps) => {
+export const WarningModalContextProvider = ({ children }: WarningModalContextProps) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const [error, setError] = React.useState('')
   const [success, setSuccess] = React.useState('')
@@ -38,7 +38,7 @@ export const ModalContextProvider = ({ children }: ModalContextProps) => {
     }
   },[error, success])
 
-  const contextValue: ModalContextType = {
+  const contextValue: WarningModalContextType = {
     isOpen,
     setError,
     error,
@@ -46,7 +46,7 @@ export const ModalContextProvider = ({ children }: ModalContextProps) => {
     setSuccess,
   };
 
-  return <ModalContext.Provider value={contextValue}>{children}</ModalContext.Provider>;
+  return <WarningModalContext.Provider value={contextValue}>{children}</WarningModalContext.Provider>;
 };
 
-export default ModalContext;
+export default WarningModalContext;
