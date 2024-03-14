@@ -14,10 +14,13 @@ const NoPlansFoundContainer = styled.div`
   left: 50%;
   top: 55%;
   text-align: center;
-`;
+  color: ${({theme})=> theme.colors.blue};
+  `;
 
 const StyledH1 = styled.h1`
   font-size: 1.5rem;
+  font-family: ${({ theme }) => theme.fonts.standard};
+  margin: 20px;
 `;
 
 const StyledIcon = styled(MdSearchOff)`

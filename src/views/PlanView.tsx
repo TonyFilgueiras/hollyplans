@@ -1,14 +1,14 @@
 import React from "react";
 import styled from "styled-components";
 import { Title } from "../styles/Title";
-import { useNavigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import useFetchPlans from "../hooks/useFetchPlans";
 import IHolidayPlans from "../interfaces/IHolidayPlans";
 import Button from "../components/Button";
 import { ReturnButton } from "../styles/ReturnButton";
 import { LuPencil } from "react-icons/lu";
-import ModalContext from "../contexts/WarningModalContext";
 import { device } from "../styles/Breakpoints";
+import WarningModalContext from "../contexts/WarningModalContext";
 
 const ViewContainer = styled.div`
   background-color: ${({ theme }) => theme.colors.skyBlue};
@@ -101,13 +101,17 @@ export default function PlanView() {
   const [plan, setPlan] = React.useState<IHolidayPlans>();
   const { getPlanById } = useFetchPlans();
   const navigate = useNavigate();
-  const { setSuccess } = React.useContext(ModalContext);
+  const { setSuccess, setError } = React.useContext(WarningModalContext);
 
   React.useEffect(() => {
     const fetchPlan = async () => {
       try {
         if (id) {
           const planData = await getPlanById(id);
+          if (!planData) {
+            setError("Plan not found");
+            navigate("/plans");
+          }
 
           setPlan(planData);
         }
@@ -115,9 +119,9 @@ export default function PlanView() {
         console.log(err);
         console.error("Error fetching plan:");
       }
-    };    
+    };
     fetchPlan();
-  }, [getPlanById, id]);
+  }, [getPlanById, id, navigate, setError]);
 
   return (
     <ViewContainer>

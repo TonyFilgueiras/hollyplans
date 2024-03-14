@@ -51,9 +51,7 @@ export default function useFetchPlans() {
 
         if (docSnap.exists()) {
           return  docSnap.data() as IHolidayPlans
-        } else {
-          console.log("No such document!");
-        }
+        } 
       } catch (e) {
         console.log(e);
         setError("Error on fetching holiday plans");
