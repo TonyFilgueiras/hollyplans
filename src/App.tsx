@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useParams } from "react-router-dom";
 import HomeView from "./views/HomeView";
 import GlobalStyle from "./styles/GlobalStyle";
 import { ThemeProvider } from "styled-components";
@@ -6,7 +6,7 @@ import { theme } from "./styles/Theme";
 import Header from "./components/Header";
 import RegisterView from "./views/RegisterView";
 import LoginView from "./views/LoginView";
-import {  UserContextProvider } from "./contexts/UserContext";
+import { UserContextProvider } from "./contexts/UserContext";
 import UserDashboardView from "./views/UserDashboardView";
 import { ModalContextProvider } from "./contexts/ModalContext";
 import ErrorModal from "./components/Modal";
@@ -15,7 +15,8 @@ import React from "react";
 import ProtectedRoutes from "./ProtectedRoutes";
 import PlanView from "./views/PlanView";
 
-function App() { 
+function App() {
+  const { id } = useParams();
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
@@ -45,6 +46,14 @@ function App() {
               />
               <Route
                 path="/newplan"
+                element={
+                  <ProtectedRoutes>
+                    <NewPlanView />
+                  </ProtectedRoutes>
+                }
+              />
+              <Route
+                path="/edit/:id"
                 element={
                   <ProtectedRoutes>
                     <NewPlanView />

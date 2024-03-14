@@ -1,4 +1,4 @@
-import React, { FocusEventHandler } from "react";
+import React from "react";
 import useForm from "../hooks/useForm";
 import styled, { css } from "styled-components";
 import Fadein from "../styles/animations/FadeIn";
@@ -8,6 +8,7 @@ import { ReturnButton } from "../styles/ReturnButton";
 import { useNavigate } from "react-router-dom";
 import TagsContainer from "./TagsContainer";
 import ModalContext from "../contexts/ModalContext";
+import IHolidayPlans from "../interfaces/IHolidayPlans";
 
 export type FormValues = {
   [key: string]: string;
@@ -21,6 +22,7 @@ export type InputConfig = {
 };
 
 type Props = {
+  initialValues?: IHolidayPlans;
   title: string;
   inputs: InputConfig[];
   handleSubmit: (values: any) => void;
@@ -84,13 +86,44 @@ const StyledButton = styled(Button)<{ $animationDelay: number }>`
   `}
 `;
 
-const AuthForm: React.FC<Props> = ({ title, inputs, handleSubmit, buttonText }) => {
-  const { values, handleChange } = useForm<FormValues>({});
+const AuthForm: React.FC<Props> = ({ initialValues, title, inputs, handleSubmit, buttonText }) => {
+  const { values, setValues, handleChange } = useForm<FormValues>({});
   const [tags, setTags] = React.useState<{ [name: string]: string[] }>(
     Object.fromEntries(inputs.filter((input) => input.type === "tags").map((input) => [input.name, []]))
   );
   const { setError } = React.useContext(ModalContext);
   const navigate = useNavigate();
+
+  const mapHolidayPlansToFormValues = (holidayPlans: IHolidayPlans): FormValues => {
+    const formValues: FormValues = {};
+    for (const key in holidayPlans) {
+      if (Array.isArray(holidayPlans[key])) {
+        const myArray = holidayPlans[key] as string[];
+        myArray.forEach((value) => {
+          setTags((prevTags) => {
+            const tags = prevTags[key] || [];
+            // Check if the value already exists
+            if (!tags.includes(value)) {
+              return {
+                ...prevTags,
+                [key]: [...tags, value],
+              };
+            }
+            return prevTags; // If value exists, return the same state
+          });
+        });
+      } else {
+        formValues[key] = holidayPlans[key] as string;
+      }
+    }
+    return formValues;
+  };
+  React.useEffect(() => {
+    if (initialValues) {
+      const formValues = mapHolidayPlansToFormValues(initialValues);
+      setValues(formValues);
+    }
+  }, [initialValues, setValues]);
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -101,7 +134,7 @@ const AuthForm: React.FC<Props> = ({ title, inputs, handleSubmit, buttonText }) 
   function handleFocus(e: React.FocusEvent<HTMLInputElement>) {
     if (e.target.placeholder.includes("Date")) {
       e.target.type = "datetime-local";
-      e.target.focus()
+      e.target.focus();
     }
   }
 
@@ -112,21 +145,26 @@ const AuthForm: React.FC<Props> = ({ title, inputs, handleSubmit, buttonText }) 
   }
 
   function handleKeyDown(inputName: string, e: React.KeyboardEvent<HTMLInputElement>) {
-    setError(e.key);
     if (e.key !== "Enter") return;
 
     e.preventDefault();
 
-    const value = (e.target as HTMLInputElement).value;
-    if (!value.trim()) return;
+    const value = (e.target as HTMLInputElement).value.trim();
+    if (!value) return;
 
-    if (e.key === "Enter") {
-      setTags((prevTags) => ({
-        ...prevTags,
-        [inputName]: [...prevTags[inputName], value],
-      }));
-      (e.target as HTMLInputElement).value = "";
-    }
+    setTags((prevTags) => {
+      const tags = prevTags[inputName] || [];
+      // Check if the value already exists
+      if (!tags.includes(value)) {
+        return {
+          ...prevTags,
+          [inputName]: [...tags, value],
+        };
+      }
+      setError("Tag already inserted");
+      return prevTags; // If value exists, return the same state
+    });
+    (e.target as HTMLInputElement).value = "";
   }
 
   function removeTag(inputName: string, index: number) {

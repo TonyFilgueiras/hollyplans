@@ -6,6 +6,7 @@ type FormValues = {
 
 type FormState<T> = {
   values: T;
+  setValues: (value: T) => void;
   handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
   resetForm: () => void;
 };
@@ -27,6 +28,7 @@ const useForm = <T extends FormValues>(initialValues: T): FormState<T> => {
 
   return {
     values,
+    setValues,
     handleChange,
     resetForm
   };

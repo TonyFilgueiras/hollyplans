@@ -8,4 +8,5 @@ export default interface IHolidayPlans {
   participants: string[],
   startDate: string,
   user: string,
+  [key: string]: string | string[];
 }

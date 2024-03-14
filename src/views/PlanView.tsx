@@ -8,6 +8,7 @@ import Button from "../components/Button";
 import { ReturnButton } from "../styles/ReturnButton";
 import { LuPencil } from "react-icons/lu";
 import ModalContext from "../contexts/ModalContext";
+import { device } from "../styles/Breakpoints";
 
 const ViewContainer = styled.div`
   background-color: ${({ theme }) => theme.colors.skyBlue};
@@ -58,10 +59,27 @@ const StyledTitle = styled.h1`
 
 const InfoContainer = styled.div`
   display: flex;
+  padding: 20px;
+  margin: 10px auto;
+  font-size: clamp(1rem, 3vw, 2rem);
+  max-width: 800px;
+
+  @media (${device.sm}) {
+    padding: 10px;
+    margin: 5px 0;
+  }
+`;
+const DescriptionContainer = styled(InfoContainer)`
+  max-height: 300px;
+  overflow: auto;
+  display: flex;
 `;
 
 const StyledH2 = styled.h2`
   font-weight: bold;
+  width: 30%;
+  margin-right: 10px;
+  text-align: start;
 `;
 
 const PlanContainer = styled.div`
@@ -97,8 +115,7 @@ export default function PlanView() {
         console.log(err);
         console.error("Error fetching plan:");
       }
-    };
-
+    };    
     fetchPlan();
   }, [getPlanById, id]);
 
@@ -109,13 +126,13 @@ export default function PlanView() {
           <TitleHeader>
             <StyledReturnButton text="<" onClick={() => navigate(-1)} title="Return" />
             <StyledTitle>{plan.name}</StyledTitle>
-            <StyledEditButton title="Edit">
+            <StyledEditButton title="Edit" onClick={() => navigate(`/edit/${id}`)}>
               <LuPencil />
             </StyledEditButton>
           </TitleHeader>
-          <InfoContainer>
+          <DescriptionContainer>
             <StyledH2>Description:</StyledH2> {plan.description}
-          </InfoContainer>
+          </DescriptionContainer>
           <InfoContainer>
             <StyledH2>Location:</StyledH2> {plan.location}
           </InfoContainer>
