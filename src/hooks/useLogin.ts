@@ -5,11 +5,11 @@ import React from "react";
 import { getAuth } from "firebase/auth";
 import { FBAuth, FBFirestore } from "../services/firebase";
 import { doc, getDoc } from "firebase/firestore";
-import ErrorContext from "../contexts/ErrorContext";
+import ModalContext from "../contexts/ModalContext";
 
 export function useLogin() {
   const { setUser, setLoading, setLoggedIn } = React.useContext(UserContext);
-  const { setError } = React.useContext(ErrorContext);
+  const { setError, setSuccess } = React.useContext(ModalContext);
 
   async function getUserEmailAndUsername(user: any) {
     const userRef = doc(FBFirestore, "users", user.uid);
@@ -19,6 +19,27 @@ export function useLogin() {
     const email = await userDoc.get("email");
     return { username, email };
   }
+
+  // const loginWithUserId = async () => {
+  //   try {
+  //     const storedUserString = window.sessionStorage.getItem("userLoggedIn");
+  //     console.log(storedUserString);
+  //     if (storedUserString) {
+  //       await signInWithCustomToken(FBAuth, storedUserString);
+  //       if (FBAuth.currentUser) {
+  //         console.log(FBAuth.currentUser);
+  //       } else {
+  //         console.log(FBAuth);
+  //       }
+  //     }
+  //   } catch (err: any) {
+  //     console.log(err);
+  //     setError("Error on logging in automatically");
+  //     userLogout()
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const loginUserWithEmailAndPassword = async ({ email, password }: IAuth) => {
     try {
@@ -34,6 +55,7 @@ export function useLogin() {
 
         sessionStorage.setItem("userLoggedIn", accessToken!);
         setLoggedIn(true);
+        setSuccess(`Welcome ${userData.username}!`);
         return true;
       }
     } catch (err: any) {
@@ -138,6 +160,7 @@ export function useLogin() {
 
   return {
     loginUserWithEmailAndPassword,
+    // loginWithUserId,
     // createUserWithGoogle,
     // createUserWithFacebook,
   };

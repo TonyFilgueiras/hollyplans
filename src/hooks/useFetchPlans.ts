@@ -1,14 +1,14 @@
-import { getDocs, collection } from "firebase/firestore";
+import { getDocs, collection, DocumentData, getDoc, doc } from "firebase/firestore";
 import React from "react";
 import { FBFirestore } from "../services/firebase";
 import IHolidayPlans from "../interfaces/IHolidayPlans";
-import ErrorContext from "../contexts/ErrorContext";
+import ModalContext from "../contexts/ModalContext";
 import { FirebaseError } from "@firebase/app";
 
 export default function useFetchPlans() {
-  const [plans, setPlans] = React.useState<any[]>([]);
+  const [plans, setPlans] = React.useState<IHolidayPlans[] | DocumentData[]>([]);
   const [loading, setLoading] = React.useState(false);
-  const { setError } = React.useContext(ErrorContext);
+  const { setError } = React.useContext(ModalContext);
 
   const getPlans = React.useCallback(async () => {
     try {
@@ -21,7 +21,7 @@ export default function useFetchPlans() {
           const newData = doc.data();
           newData.id = doc.id;
 
-          const isDuplicate = plans.some((card) => card.description === newData.description);
+          const isDuplicate = plans.some((card) => card.name === newData.name);
           if (!isDuplicate) {
             return [...plans, newData];
           }
@@ -40,9 +40,34 @@ export default function useFetchPlans() {
     }
   }, [setError]);
 
+  const getPlanById = React.useCallback(
+    async (id: string) => {
+      try {
+        setError("");
+        setLoading(true);
+
+        const docRef = doc(FBFirestore, "holidayPlans", id);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          return  docSnap.data() as IHolidayPlans
+        } else {
+          console.log("No such document!");
+        }
+      } catch (e) {
+        console.log(e);
+        setError("Error on fetching holiday plans");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [setError]
+  );
+
   return {
     plans,
     loading,
     getPlans,
+    getPlanById,
   };
 }

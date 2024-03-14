@@ -1,4 +1,4 @@
-import { css} from "styled-components";
+import { css } from "styled-components";
 
 interface Props {
   borderColor: string;
@@ -6,7 +6,8 @@ interface Props {
 }
 
 export const wavyDiv = ({ borderColor, backgroundColor }: Props) => css`
+  /* height: 200px; */
   background: linear-gradient(${backgroundColor}, transparent 80%),
-    radial-gradient(7.72vw at 50% calc(100% - 10.6vw), ${borderColor} 99%, #0000 101%) calc(50% - 8vw) 0/16vw 100%,
-    radial-gradient(7.72vw at 50% calc(100% + 6.6vw), #0000 99%, ${borderColor} 101%) 50% calc(100% - 4vw) / 16vw 100% repeat-x;
+    radial-gradient(154.4px at 50% calc(100% - 212px), ${borderColor} 99%, #0000 101%) calc(50% - 160px) 0/320px 100%,
+    radial-gradient(154.4px at 50% calc(100% + 132px), #0000 99%, ${borderColor} 101%) 50% calc(100% - 80px) / 320px 100% repeat-x;
 `;

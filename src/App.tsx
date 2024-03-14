@@ -6,29 +6,56 @@ import { theme } from "./styles/Theme";
 import Header from "./components/Header";
 import RegisterView from "./views/RegisterView";
 import LoginView from "./views/LoginView";
-import { UserContextProvider } from "./contexts/UserContext";
+import {  UserContextProvider } from "./contexts/UserContext";
 import UserDashboardView from "./views/UserDashboardView";
-import { ErrorContextProvider } from "./contexts/ErrorContext";
-import ErrorModal from "./components/ErrorModal";
+import { ModalContextProvider } from "./contexts/ModalContext";
+import ErrorModal from "./components/Modal";
+import NewPlanView from "./views/NewPlanView";
+import React from "react";
+import ProtectedRoutes from "./ProtectedRoutes";
+import PlanView from "./views/PlanView";
 
-function App() {
+function App() { 
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
-      <ErrorContextProvider>
+      <ModalContextProvider>
         <BrowserRouter>
           <UserContextProvider>
             <Header />
             <Routes>
               <Route path="/" element={<HomeView />} />
-              <Route path="/dashboard" element={<UserDashboardView />} />
               <Route path="/login" element={<LoginView />} />
               <Route path="/register" element={<RegisterView />} />
+              <Route
+                path="/plans"
+                element={
+                  <ProtectedRoutes>
+                    <UserDashboardView />
+                  </ProtectedRoutes>
+                }
+              />
+              <Route
+                path="/plans/:id"
+                element={
+                  <ProtectedRoutes>
+                    <PlanView />
+                  </ProtectedRoutes>
+                }
+              />
+              <Route
+                path="/newplan"
+                element={
+                  <ProtectedRoutes>
+                    <NewPlanView />
+                  </ProtectedRoutes>
+                }
+              />
             </Routes>
           </UserContextProvider>
         </BrowserRouter>
-        <ErrorModal/>
-      </ErrorContextProvider>
+        <ErrorModal />
+      </ModalContextProvider>
     </ThemeProvider>
   );
 }

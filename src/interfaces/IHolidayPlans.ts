@@ -1,12 +1,11 @@
-import firebase from "firebase/compat/app";
-
 export default interface IHolidayPlans {
   id: string,
+  name: string,
   activities:string[],
   description:string,
-  endDate: firebase.firestore.Timestamp,
+  endDate: string,
   location: string,
   participants: string[],
-  startDate: firebase.firestore.Timestamp,
+  startDate: string,
   user: string,
 }

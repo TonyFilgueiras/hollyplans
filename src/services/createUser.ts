@@ -3,7 +3,7 @@ import { FBAuth, FBFirestore } from "./firebase";
 import { setDoc, doc } from "firebase/firestore";
 import IAuth from "../interfaces/IAuth";
 
-export default async function createUserWithEmail({ username, email, password }: IAuth, setError: (error: string) => void) {
+export default async function createUserWithEmail({ username, email, password }: IAuth, setError: (error: string) => void, setSuccess: (error: string) => void) {
   try {
     await createUserWithEmailAndPassword(FBAuth, email, password).then(async (userCredential) => {
       const uid = userCredential.user.uid;
@@ -16,7 +16,7 @@ export default async function createUserWithEmail({ username, email, password }:
         username: username,
         email: email,
       });
-      setError("Usuário criado com sucesso");
+      setSuccess("User created");
       signInWithEmailAndPassword(FBAuth, email, password);
     });
   } catch (e: any) {

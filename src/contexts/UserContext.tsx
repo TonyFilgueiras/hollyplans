@@ -3,7 +3,7 @@ import React from "react";
 // import { TOKEN_POST, TOKEN_VALIDATE_POST, USER_GET } from './api'
 import { useNavigate } from "react-router-dom";
 import IUser from "../interfaces/IUser";
-import ErrorContext from "./ErrorContext";
+import ModalContext from "./ModalContext";
 
 interface UserContextProps {
   children: React.ReactNode;
@@ -32,9 +32,9 @@ export const UserContext = React.createContext<UserContextType>(initialValue);
 
 export const UserContextProvider = ({ children }: UserContextProps) => {
   const [loggedIn, setLoggedIn] = React.useState(false);
-  const [loading, setLoading] = React.useState(true);
+  const [loading, setLoading] = React.useState(false);
   const [user, setUser] = React.useState<IUser | undefined>();
-  const {setError} = React.useContext(ErrorContext)
+  const { setError } = React.useContext(ModalContext);
 
   const navigate = useNavigate();
 
@@ -76,30 +76,5 @@ export const UserContextProvider = ({ children }: UserContextProps) => {
   //   }
   // }
 
-  React.useEffect(() => {
-    async function autoLogin() {
-      const storedUserString = window.sessionStorage.getItem("userLogado");
-      if (storedUserString) {
-        try {
-          const storedUser = JSON.parse(storedUserString);
-          setUser(storedUser);
-          setLoggedIn(true);
-        } catch (err: any) {
-          setError(err);
-          userLogout();
-        } finally {
-          setLoading(false);
-        }
-      } else {
-        setLoading(false);
-      }
-    }
-    autoLogin();
-  }, [userLogout, setError]);
-
-  return (
-    <UserContext.Provider value={{ loading, setLoading, user, setUser, loggedIn, setLoggedIn, userLogout }}>
-      {children}
-    </UserContext.Provider>
-  );
+  return <UserContext.Provider value={{ loading, setLoading, user, setUser, loggedIn, setLoggedIn, userLogout }}>{children}</UserContext.Provider>;
 };

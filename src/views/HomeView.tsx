@@ -7,6 +7,9 @@ import Fadein from "../styles/animations/FadeIn";
 import { StyledButton } from "../components/Button";
 import Carousel from "../components/Carousel";
 import { Title } from "../styles/Title";
+import { useNavigate } from "react-router-dom";
+import { UserContext } from "../contexts/UserContext";
+// import { useLogin } from "../hooks/useLogin";
 
 const HomeViewContainer = styled.div`
 text-align: center;
@@ -26,7 +29,7 @@ const TitleContainer = styled.div`
 `;
 
 const StyledTitle = styled.h1`
-  ${Title({animationDelay: 1})}
+  ${Title({ animationDelay: 1 })}
 `;
 
 const SubTitle = styled(StyledTitle)`
@@ -45,6 +48,20 @@ const HomeViewButton = styled(StyledButton)`
 `;
 
 export default function HomeView() {
+  const navigate = useNavigate()
+  const { loggedIn, } = React.useContext(UserContext)
+  // const {loginWithUserId} = useLogin()
+    
+  // React.useEffect(() => {
+  //   loginWithUserId()
+  // }, [])
+  
+  React.useEffect(() => {
+    if (loggedIn) {
+      navigate("/plans");
+    }
+  }, [loggedIn, navigate]);
+
   return (
     <HomeViewContainer>
       <TitleContainer>
@@ -52,7 +69,7 @@ export default function HomeView() {
         <SubTitle>Organize your vacation in a few clicks.</SubTitle>
       </TitleContainer>
       <Carousel slides={["Schedule your trips", "Calculate your costs", "Pick your participants", "Plan your activities"]} />
-      <HomeViewButton $negative={false} onClick={() => console.log("Button clicked")}>
+      <HomeViewButton $negative={false} onClick={() => navigate("/login")}>
         Get Started →
       </HomeViewButton>
     </HomeViewContainer>

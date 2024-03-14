@@ -1,6 +1,8 @@
 import React from "react";
 import { MdSearchOff } from "react-icons/md";
 import styled from "styled-components";
+import Button from "./Button";
+import { useNavigate } from "react-router-dom";
 
 interface NoPlansFoundProps {
   carta: string;
@@ -23,10 +25,13 @@ const StyledIcon = styled(MdSearchOff)`
 `;
 
 export default function NoPlansFound({ carta }: NoPlansFoundProps) {
+  const navigate = useNavigate()
+
   return (
     <NoPlansFoundContainer>
       <StyledIcon />
       <StyledH1>Nenhum {carta} encontrado</StyledH1>
+      <Button text="Create Plan" onClick={()=> navigate('/newplan')}></Button>
     </NoPlansFoundContainer>
   );
 }

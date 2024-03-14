@@ -6,6 +6,7 @@ export const theme = {
     pink: "#FF6B6B",
     skyBlue: "#CAF0F8",
     brown: "#D2B48C",
+    green: "#B7E4C7"
   },
   fonts: {
     appTheme: '"Pacifico", cursive',

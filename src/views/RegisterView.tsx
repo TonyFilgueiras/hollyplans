@@ -4,7 +4,7 @@ import Fadein from "../styles/animations/FadeIn";
 import createUserWithEmail from "../services/createUser";
 import FormComponent from "../components/FormComponent";
 import IAuth from "../interfaces/IAuth";
-import ErrorContext from "../contexts/ErrorContext";
+import ModalContext from "../contexts/ModalContext";
 
 const RegisterViewContainer = styled.div`
   opacity: 0;
@@ -18,11 +18,10 @@ const RegisterView = () => {
     { type: "password", name: "password", placeholder: "Password", required: true },
   ];
 
-  const {setError}= React.useContext(ErrorContext)
+  const {setError, setSuccess}= React.useContext(ModalContext)
 
   const handleSubmit = (values: IAuth) => {
-    console.log("Form submitted:", values);
-    createUserWithEmail(values, setError);
+    createUserWithEmail(values, setError, setSuccess);
   };
 
   return (
