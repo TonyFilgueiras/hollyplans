@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Title } from "../styles/Title";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useFetchPlans from "../hooks/useFetchPlans";
 import IHolidayPlans from "../interfaces/IHolidayPlans";
 import Button from "../components/Button";
@@ -9,7 +9,6 @@ import { ReturnButton } from "../styles/ReturnButton";
 import { LuPencil } from "react-icons/lu";
 import { device } from "../styles/Breakpoints";
 import WarningModalContext from "../contexts/WarningModalContext";
-import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import domtoimage from "dom-to-image";
 import PdfDocument from "../PdfDocument";

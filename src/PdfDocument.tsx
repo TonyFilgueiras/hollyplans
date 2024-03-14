@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import IHolidayPlans from "./interfaces/IHolidayPlans";
 import { Title } from "./styles/Title";
-import { theme } from "./styles/Theme";
 
 type Props = {
   plan: IHolidayPlans;
@@ -14,7 +13,7 @@ const ViewContainer = styled.div`
   height: 628px;
   padding-bottom: 20px;
   position: fixed;
-  left: -0px;
+  left: -9000000000000px;
   top: 0;
 `;
 
