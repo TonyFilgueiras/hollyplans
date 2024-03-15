@@ -21,8 +21,8 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
-      <ConfirmModalContextProvider>
-        <WarningModalContextProvider>
+      <WarningModalContextProvider>
+        <ConfirmModalContextProvider>
           <BrowserRouter>
             <UserContextProvider>
               <Header />
@@ -67,8 +67,8 @@ function App() {
             </UserContextProvider>
           </BrowserRouter>
           <WarningModal />
-        </WarningModalContextProvider>
-      </ConfirmModalContextProvider>
+        </ConfirmModalContextProvider>
+      </WarningModalContextProvider>
     </ThemeProvider>
   );
 }

@@ -2,15 +2,12 @@ import React from "react";
 import FormComponent from "../components/FormComponent";
 import { UserContext } from "../contexts/UserContext";
 import IHolidayPlans from "../interfaces/IHolidayPlans";
-import createPlan from "../services/createPlan";
-import WarningModalContext from "../contexts/WarningModalContext";
 import { useNavigate, useParams } from "react-router-dom";
 import useFetchPlans from "../hooks/useFetchPlans";
-import updatePlan from "../services/updatePlan";
 import ConfirmModalContext from "../contexts/ConfirmModalContext";
 import ConfirmModal from "../components/ConfirmModal";
-import deletePlan from "../services/deletePlan";
 import Loading from "../components/Loading";
+import { usePlanCRUD } from "../hooks/usePlanCRUD";
 
 export default function NewPlanView() {
   const createPlansInputs = [
@@ -23,12 +20,11 @@ export default function NewPlanView() {
     { type: "tags", name: "activities", placeholder: "Activities", required: false },
   ];
   const [plan, setPlan] = React.useState<IHolidayPlans>();
-  const [loadingText, setLoadingText] = React.useState("");
   const { id } = useParams();
-  const { setError, setSuccess } = React.useContext(WarningModalContext);
   const { openConfirmModal } = React.useContext(ConfirmModalContext);
   const { user } = React.useContext(UserContext);
   const { getPlanById } = useFetchPlans();
+  const { createPlan, deletePlan, updatePlan, loading, loadingText } = usePlanCRUD();
   const navigate = useNavigate();
 
   React.useEffect(() => {
@@ -49,14 +45,11 @@ export default function NewPlanView() {
 
   async function handleSubmit(values: IHolidayPlans) {
     if (id) {
-      setLoadingText("Updating...");
-      await updatePlan(id, values, setError, setSuccess);
+      await updatePlan(id, values);
     } else {
-      setLoadingText("Creating Plan...");
-      await createPlan(user!.username, values, setError, setSuccess);
+      await createPlan(user!.username, values);
     }
     navigate("/plans");
-    setLoadingText("");
   }
 
   function handleOpenModal() {
@@ -64,9 +57,7 @@ export default function NewPlanView() {
   }
 
   async function handleDeleteConfirmed() {
-    setLoadingText("Deleting...");
-    await deletePlan(id!, setError, setSuccess);
-    setLoadingText("");
+    await deletePlan(id!);
     navigate("/plans");
   }
 
@@ -90,7 +81,7 @@ export default function NewPlanView() {
           modalSubTitle={`are you sure you want to delete ${plan!.name}??`}
         />
       )}
-      {loadingText && <Loading text={loadingText} />}
+      {loading && <Loading text={loadingText ? loadingText : "Loading..."} />}
     </>
   );
 }

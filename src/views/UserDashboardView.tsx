@@ -11,12 +11,11 @@ import Button from "../components/Button";
 import { ReturnButton } from "../styles/ReturnButton";
 import { RiDeleteBin5Fill } from "react-icons/ri";
 import ConfirmModalContext from "../contexts/ConfirmModalContext";
-import deletePlan from "../services/deletePlan";
-import WarningModalContext from "../contexts/WarningModalContext";
 import ConfirmModal from "../components/ConfirmModal";
 import { device } from "../styles/Breakpoints";
 import IHolidayPlans from "../interfaces/IHolidayPlans";
 import { DocumentData } from "firebase/firestore";
+import { usePlanCRUD } from "../hooks/usePlanCRUD";
 // import { StyledInput } from "../components/FormComponent";
 
 const StyledTitle = styled.h1`
@@ -155,17 +154,16 @@ const PlansCardContainer = styled.div`
 
 export default function UserDashboardView() {
   const { plans, loading, getPlans } = useFetchPlans();
+  const { deletePlan, loadingText, setLoadingText } = usePlanCRUD();
   const { user } = React.useContext(UserContext);
   const navigate = useNavigate();
   const [clickedPlanId, setClickedPlanId] = React.useState("");
-  const [loadingText, setLoadingText] = React.useState("");
   const [deletingId, setDeletingId] = React.useState("");
   const [deletingName, setDeletingName] = React.useState("");
   const [notClickedPlanId, setNotClickedPlanId] = React.useState<string[]>([]);
   const [plansDisplayed, setPlansDisplayed] = React.useState<IHolidayPlans[] | DocumentData[]>([]);
   const [overflowRemoved, setOverflowRemoved] = React.useState(false);
   const { openConfirmModal } = React.useContext(ConfirmModalContext);
-  const { setError, setSuccess } = React.useContext(WarningModalContext);
 
   const handleClick = (planId: string, e: React.MouseEvent) => {
     if ((e.target as HTMLElement).closest(".deleteBtn")) {
@@ -190,12 +188,10 @@ export default function UserDashboardView() {
 
   async function handleDeleteConfirmed(id: string) {
     setLoadingText("Deleting...");
-    await deletePlan(id, setError, setSuccess);
-    setLoadingText("Loading...");
+    await deletePlan(id);
     await getPlans();
     setLoadingText("");
-    setPlansDisplayed(prevPlans => prevPlans.filter(plan => plan.id !== id));
-    console.log(plans);
+    setPlansDisplayed((prevPlans) => prevPlans.filter((plan) => plan.id !== id));
   }
 
   React.useEffect(() => {
@@ -203,9 +199,9 @@ export default function UserDashboardView() {
   }, [getPlans]);
 
   React.useEffect(() => {
-    setPlansDisplayed(plans);
-    console.log("nmaudoe?");
-  }, [plans]);
+    const plansFiltered = plans.filter((plan) => plan.user === user!.username);
+    setPlansDisplayed(plansFiltered);
+  }, [plans, user]);
   return (
     <DashboardContainer>
       <StyledTitle>My HollyPlans</StyledTitle>

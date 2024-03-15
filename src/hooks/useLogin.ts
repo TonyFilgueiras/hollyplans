@@ -1,10 +1,10 @@
 import { UserContext } from "../contexts/UserContext";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import IAuth from "../interfaces/IAuth";
 import React from "react";
 import { getAuth } from "firebase/auth";
 import { FBAuth, FBFirestore } from "../services/firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import ModalContext from "../contexts/WarningModalContext";
 
 export function useLogin() {
@@ -53,7 +53,42 @@ export function useLogin() {
     }
   };
 
+  async function createUserWithEmail({ username, email, password }: IAuth) {
+    try {
+      setLoading(true);
+      await createUserWithEmailAndPassword(FBAuth, email, password).then(async (userCredential) => {
+        const uid = userCredential.user.uid;
+        await updateProfile(userCredential.user, {
+          displayName: username,
+        });
+        const userDocRef = doc(FBFirestore, "users", uid);
+        await setDoc(userDocRef, {
+          created: "email",
+          username: username,
+          email: email,
+        });
+        setSuccess("User created");
+        loginUserWithEmailAndPassword({email, password});
+      });
+    } catch (e: any) {
+      if (e?.code === "auth/email-already-in-use") {
+        setError("Error on creating user: Email already being used");
+      } else if (e?.code === "auth/weak-password") {
+        setError("Error on creating user: Password is too weak");
+      } else if (e?.code === "auth/invalid-email") {
+        setError("Error on creating user: Invalid email");
+      } else {
+        setError("Error on creating user");
+      }
+
+      console.log(e);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return {
     loginUserWithEmailAndPassword,
+    createUserWithEmail,
   };
 }

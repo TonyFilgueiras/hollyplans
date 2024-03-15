@@ -1,10 +1,12 @@
-import React from "react";// Import the useForm hook
+import React from "react"; // Import the useForm hook
 import styled from "styled-components";
 import Fadein from "../styles/animations/FadeIn";
-import createUserWithEmail from "../services/createUser";
 import FormComponent from "../components/FormComponent";
 import IAuth from "../interfaces/IAuth";
-import ModalContext from "../contexts/WarningModalContext";
+import { useLogin } from "../hooks/useLogin";
+import { UserContext } from "../contexts/UserContext";
+import Loading from "../components/Loading";
+import { useNavigate } from "react-router-dom";
 
 const RegisterViewContainer = styled.div`
   opacity: 0;
@@ -17,15 +19,22 @@ const RegisterView = () => {
     { type: "email", name: "email", placeholder: "Email", required: true },
     { type: "password", name: "password", placeholder: "Password", required: true },
   ];
-
-  const {setError, setSuccess}= React.useContext(ModalContext)
-
+  const { createUserWithEmail } = useLogin();
+  const { loading, loggedIn } = React.useContext(UserContext);
   const handleSubmit = (values: IAuth) => {
-    createUserWithEmail(values, setError, setSuccess);
+    createUserWithEmail(values);
   };
+  const navigate = useNavigate()
+
+  React.useEffect(() => {
+    if (loggedIn) {
+      navigate("/plans");
+    }
+  }, [loggedIn, navigate]);
 
   return (
     <RegisterViewContainer>
+      {loading && <Loading text="Creating user..."/>}
       <FormComponent title="Register" inputs={registerInputs} buttonText="Submit" handleSubmit={(values) => handleSubmit(values)} />
     </RegisterViewContainer>
   );
