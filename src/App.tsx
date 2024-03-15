@@ -15,6 +15,7 @@ import React from "react";
 import ProtectedRoutes from "./ProtectedRoutes";
 import PlanView from "./views/PlanView";
 import { ConfirmModalContextProvider } from "./contexts/ConfirmModalContext";
+import NotFoundView from "./views/NotFoundView";
 
 function App() {
   return (
@@ -61,6 +62,7 @@ function App() {
                     </ProtectedRoutes>
                   }
                 />
+                <Route path="/*" element={<NotFoundView />} />
               </Routes>
             </UserContextProvider>
           </BrowserRouter>
