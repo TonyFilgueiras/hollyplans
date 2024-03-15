@@ -1,30 +1,27 @@
-# React + TypeScript + Vite
+# HollyPlans
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## website Link
 
-Currently, two official plugins are available:
+https://hollyplans.netlify.app
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Tecnologies used
 
-## Expanding the ESLint configuration
+- React
+- Vite
+- Typescript
+- Styled Components
+- firebase 
+- jspdf
+- dom-to-image
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## About the project
 
-- Configure the top-level `parserOptions` property like this:
+- Web site made for making plans
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+![hollyplans_thumbnail](https://github.com/TonyFilgueiras/hollyplans/assets/101405712/487b6fed-310f-4994-8351-131df514efae)
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## Running locally
+
+- clone the repo using `git clone https://github.com/TonyFilgueiras/hollyplans.git)https://github.com/TonyFilgueiras/hollyplans.git`
+- `cd hollyplans`
+- `npm install`
