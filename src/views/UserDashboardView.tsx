@@ -245,7 +245,7 @@ export default function UserDashboardView() {
           </PlansCardContainer>
         </>
       ) : (
-        <NoPlansFound carta="produto/serviço" />
+        <NoPlansFound />
       )}
     </DashboardContainer>
   );
