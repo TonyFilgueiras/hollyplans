@@ -9,10 +9,12 @@ import Carousel from "../components/Carousel";
 import { Title } from "../styles/Title";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../contexts/UserContext";
+import { onAuthStateChanged } from "firebase/auth";
+import { FBAuth } from "../services/firebase";
 // import { useLogin } from "../hooks/useLogin";
 
 const HomeViewContainer = styled.div`
-text-align: center;
+  text-align: center;
   height: 85vh;
   display: flex;
   flex-direction: column;
@@ -48,14 +50,18 @@ const HomeViewButton = styled(StyledButton)`
 `;
 
 export default function HomeView() {
-  const navigate = useNavigate()
-  const { loggedIn, } = React.useContext(UserContext)
-  // const {loginWithUserId} = useLogin()
-    
-  // React.useEffect(() => {
-  //   loginWithUserId()
-  // }, [])
-  
+  const navigate = useNavigate();
+  const { loggedIn, setLoggedIn, setUser } = React.useContext(UserContext);
+
+  React.useEffect(() => {
+    onAuthStateChanged(FBAuth, (currentUser) => {
+      if (currentUser) {
+        setUser({ email: currentUser.email!, username: currentUser.displayName! });
+        setLoggedIn(true)
+      }
+    });
+  }, [setLoggedIn, setUser]);
+
   React.useEffect(() => {
     if (loggedIn) {
       navigate("/plans");

@@ -20,27 +20,6 @@ export function useLogin() {
     return { username, email };
   }
 
-  // const loginWithUserId = async () => {
-  //   try {
-  //     const storedUserString = window.sessionStorage.getItem("userLoggedIn");
-  //     console.log(storedUserString);
-  //     if (storedUserString) {
-  //       await signInWithCustomToken(FBAuth, storedUserString);
-  //       if (FBAuth.currentUser) {
-  //         console.log(FBAuth.currentUser);
-  //       } else {
-  //         console.log(FBAuth);
-  //       }
-  //     }
-  //   } catch (err: any) {
-  //     console.log(err);
-  //     setError("Error on logging in automatically");
-  //     userLogout()
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   const loginUserWithEmailAndPassword = async ({ email, password }: IAuth) => {
     try {
       setLoading(true);
@@ -74,94 +53,7 @@ export function useLogin() {
     }
   };
 
-  // const createUserWithGoogle = async () => {
-  //   try {
-  //     setLoading(true);
-  //     await signInWithPopup(FBAuth, googleProvider);
-  //     if (FBAuth.currentUser) {
-  //       const user = FBAuth.currentUser;
-  //       const userData = {
-  //         created: "google",
-  //         displayName: user.displayName,
-  //         email: user.email,
-  //         photoURL: user.photoURL,
-  //         telefone: user.providerData[0].phoneNumber,
-  //         whatsapp: user.providerData[0].phoneNumber ? true : false,
-  //         prestador: false,
-  //         prestadorAprovado: false,
-  //         admin: false,
-  //       };
-  //       // Store the user data in Firestore
-  //       const userDocRef = doc(FBFirestore, "usuarios", user.uid);
-  //       const userDocSnapshot = (await getDoc(userDocRef)) as DocumentSnapshot<IUser>;
-
-  //       if (!userDocSnapshot.exists()) {
-  //         await setDoc(userDocRef, userData);
-  //       }
-
-  //       setUser(userDocSnapshot.data());
-  //       setLoggedIn(true);
-  //       sessionStorage.setItem("userLogado", JSON.stringify(userDocSnapshot.data()));
-  //       return "login";
-  //     }
-  //   } catch (err: any) {
-  //     setError(err);
-  //     console.log(err);
-  //     if (err.code !== "auth/cancelled-popup-request" && err.code !== "auth/popup-blocked" && err.code !== "auth/popup-closed-by-user")
-  //       alert("Erro ao criar usuario: " + err);
-  //     return null;
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // const createUserWithFacebook = async () => {
-  //   try {
-  //     setLoading(true);
-  //     // Sign in with Facebook
-  //     await signInWithPopup(FBAuth, facebookProvider);
-
-  //     if (FBAuth.currentUser) {
-  //       const user = FBAuth.currentUser;
-  //       const userData = {
-  //         created: "facebook",
-  //         displayName: user.displayName,
-  //         email: user.email,
-  //         photoURL: user.photoURL,
-  //         telefone: user.providerData[0].phoneNumber,
-  //         whatsapp: user.providerData[0].phoneNumber ? true : false,
-  //         prestador: false,
-  //         prestadorAprovado: false,
-  //         admin: false,
-  //       };
-
-  //       // Store the user data in Firestore
-  //       const userDocRef = doc(FBFirestore, "usuarios", user.uid);
-  //       const userDocSnapshot = (await getDoc(userDocRef)) as DocumentSnapshot<IUser>;
-
-  //       if (!userDocSnapshot.exists()) {
-  //         await setDoc(userDocRef, userData);
-  //       }
-
-  //       setUser(userDocSnapshot.data());
-  //       setLoggedIn(true);
-  //       sessionStorage.setItem("userLogado", JSON.stringify(userDocSnapshot.data()));
-
-  //       return "login";
-  //     }
-  //   } catch (err: any) {
-  //     setError(err);
-  //     alert("Erro ao criar usuario: " + err);
-  //     return null;
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   return {
     loginUserWithEmailAndPassword,
-    // loginWithUserId,
-    // createUserWithGoogle,
-    // createUserWithFacebook,
   };
 }

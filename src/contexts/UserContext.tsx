@@ -4,6 +4,8 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import IUser from "../interfaces/IUser";
 import ModalContext from "./WarningModalContext";
+import { signOut } from "firebase/auth";
+import { FBAuth } from "../services/firebase";
 
 interface UserContextProps {
   children: React.ReactNode;
@@ -41,6 +43,8 @@ export const UserContextProvider = ({ children }: UserContextProps) => {
   const userLogout = React.useCallback(
     async function () {
       setError("");
+      setLoading(true);
+      await signOut(FBAuth);
       setLoading(false);
       setLoggedIn(false);
       setUser(undefined);
