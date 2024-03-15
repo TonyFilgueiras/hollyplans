@@ -12,12 +12,12 @@ import { usePlanCRUD } from "../hooks/usePlanCRUD";
 export default function NewPlanView() {
   const createPlansInputs = [
     { type: "text", name: "name", placeholder: "Plan Title", required: true },
-    { type: "text", name: "description", placeholder: "description", required: false },
-    { type: "text", name: "location", placeholder: "Location", required: false },
-    { type: "text", name: "startDate", placeholder: "Start Date", required: false },
-    { type: "text", name: "endDate", placeholder: "End Date", required: false },
-    // { type: "tags", name: "participants", placeholder: "Participants", required: false },
-    { type: "tags", name: "activities", placeholder: "Activities", required: false },
+    { type: "text", name: "description", placeholder: "description", required: true },
+    { type: "text", name: "location", placeholder: "Location", required: true },
+    { type: "text", name: "startDate", placeholder: "Start Date", required: true },
+    { type: "text", name: "endDate", placeholder: "End Date", required: true },
+    { type: "text", name: "participants", placeholder: "Participants", required: false },
+    { type: "tags", name: "activities", placeholder: "Activities", required: true },
   ];
   const [plan, setPlan] = React.useState<IHolidayPlans>();
   const { id } = useParams();

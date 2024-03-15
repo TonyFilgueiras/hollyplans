@@ -9,6 +9,19 @@ export function usePlanCRUD() {
   const [loadingText, setLoadingText] = React.useState("");
   const { setError, setSuccess } = React.useContext(WarningModalContext);
 
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const formattedDate = date.toLocaleDateString("en-US", {
+      month: "2-digit",
+      day: "2-digit",
+      year: "numeric",
+    });
+    const formattedTime = date.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    return `${formattedDate} ${formattedTime}h`;
+  };
   async function createPlan(user: string, { activities, description, endDate, location, name, participants, startDate }: IHolidayPlans) {
     try {
       setLoadingText("Creating Plan...");
@@ -16,14 +29,17 @@ export function usePlanCRUD() {
       const holidayPlansCollectionRef = collection(FBFirestore, "holidayPlans");
       const newPlanDocRef = doc(holidayPlansCollectionRef);
 
+      const endDateFormatted = formatDate(endDate);
+      const startDateFormatted = formatDate(startDate);
+
       await setDoc(newPlanDocRef, {
         activities: activities || [],
         description: description || "",
-        endDate: endDate || null,
+        endDate: endDateFormatted || null,
         name: name,
-        startDate: startDate || null,
+        startDate: startDateFormatted || null,
         location: location || "",
-        participants: participants || [],
+        participants: participants,
         user: user,
       });
       setSuccess("Plan created");
@@ -41,14 +57,15 @@ export function usePlanCRUD() {
       setLoading(true);
       // Get the reference to the plan document
       const planDocRef = doc(FBFirestore, "holidayPlans", planId);
-
+      const endDateFormatted = formatDate(endDate);
+      const startDateFormatted = formatDate(startDate);
       // Update the document fields
       await updateDoc(planDocRef, {
         activities: activities || [],
         description: description || "",
-        endDate: endDate || null,
+        endDate: endDateFormatted || null,
         name: name,
-        startDate: startDate || null,
+        startDate: startDateFormatted || null,
         location: location || "",
         participants: participants || [],
       });

@@ -5,7 +5,7 @@ export default interface IHolidayPlans {
   description:string,
   endDate: string,
   location: string,
-  participants: string[],
+  participants: string,
   startDate: string,
   user: string,
   [key: string]: string | string[];
