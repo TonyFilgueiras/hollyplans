@@ -4,10 +4,6 @@ import styled from "styled-components";
 import Button from "./Button";
 import { useNavigate } from "react-router-dom";
 
-interface NoPlansFoundProps {
-  carta: string;
-}
-
 const NoPlansFoundContainer = styled.div`
   transform: translate(-50%, -50%);
   position: absolute;
@@ -27,13 +23,13 @@ const StyledIcon = styled(MdSearchOff)`
   font-size: 10rem;
 `;
 
-export default function NoPlansFound({ carta }: NoPlansFoundProps) {
+export default function NoPlansFound() {
   const navigate = useNavigate()
 
   return (
     <NoPlansFoundContainer>
       <StyledIcon />
-      <StyledH1>Nenhum {carta} encontrado</StyledH1>
+      <StyledH1>No plan registered</StyledH1>
       <Button text="Create Plan" onClick={()=> navigate('/newplan')}></Button>
     </NoPlansFoundContainer>
   );
