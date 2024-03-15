@@ -97,7 +97,7 @@ export default function PdfDocument({ plan }: Props) {
             <StyledH2>Start Date:</StyledH2> {plan.startDate}
           </InfoContainer>
           <InfoContainer>
-            <StyledH2>Participants:</StyledH2> {plan.participants.join(", ")}
+            <StyledH2>Participants:</StyledH2> {plan.participants}
           </InfoContainer>
           <InfoContainer>
             <StyledH2>Activities:</StyledH2> {plan.activities.join(", ")}
